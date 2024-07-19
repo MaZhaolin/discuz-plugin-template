@@ -1,13 +1,16 @@
 {
-  "input": "./", 
-  "output": "./plugin.zip",
+  "input": "./",
+  "output": "./dist",
   "exclude": [
-    "node_modules",
-    ".git",
-    "build",
+    "node_modules/**",
+    ".git/**",
+    "build/**",
     "package.json",
     "package-lock.json",
-    ".env"
+    "tsconfig.json",
+    "*.config.ts",
+    "dist/**",
+    "react-front/**"
   ],
   "processFiles": [
     "*.php",

@@ -1,47 +1,43 @@
-const fs = require('fs');
-const path = require('path');
-const archiver = require('archiver');
-const config = require('./config.json');
+const fs = require("fs");
+const path = require("path");
+const { glob } = require("glob");
+const { minimatch } = require("minimatch");
 
-const output = fs.createWriteStream(config.output);
-const archive = archiver('zip', {
-  zlib: { level: 9 }
-});
+// 读取配置文件
+const config = require("./config.json"); // 路径调整为相对于 build 目录
+const { exit } = require("process");
 
-output.on('close', () => {
-  console.log(`${archive.pointer()} total bytes`);
-  console.log('Archiver has been finalized and the output file descriptor has closed.');
-});
+const { input: inputDir, output: outputDir, exclude, processFiles } = config;
 
-archive.on('warning', (err) => {
-  if (err.code !== 'ENOENT') {
-    throw err;
-  }
-});
+// 调整路径为相对 build 目录
+const baseInputDir = path.resolve(__dirname, "../", inputDir);
+const baseOutputDir = path.resolve(__dirname, "../", outputDir);
 
-archive.on('error', (err) => {
-  throw err;
-});
+// 创建输出目录
+if (!fs.existsSync(baseOutputDir)) {
+  fs.mkdirSync(baseOutputDir, { recursive: true });
+}
 
-archive.pipe(output);
+// 复制文件到目标目录
+async function copyFiles() {
+  // 获取所有匹配的文件
+  const files = await glob(`${baseInputDir}/**/*`, { ignore: exclude});
 
-// 递归添加目录和文件
-const addFiles = (dir, base) => {
-  const items = fs.readdirSync(dir);
-  items.forEach(item => {
-    const fullPath = path.join(dir, item);
-    const relativePath = path.relative(base, fullPath);
-    const isExcluded = config.exclude.some(excl => relativePath.includes(excl));
+  files.forEach((file) => {
 
-    if (!isExcluded) {
-      if (fs.lstatSync(fullPath).isDirectory()) {
-        addFiles(fullPath, base);
-      } else {
-        archive.file(fullPath, { name: relativePath });
-      }
+    const relativePath = path.relative(baseInputDir, file);
+    const destPath = path.join(baseOutputDir, relativePath);
+
+    if (fs.lstatSync(file).isDirectory()) {
+      fs.mkdirSync(destPath, { recursive: true });
+    } else {
+      fs.mkdirSync(path.dirname(destPath), { recursive: true });
+      fs.copyFileSync(file, destPath);
     }
-  });
-};
 
-addFiles(config.input, config.input);
-archive.finalize();
+  });
+}
+
+copyFiles();
+
+console.log("build successfully.");

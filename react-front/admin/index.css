@@ -1,0 +1,11 @@
+body {
+  text-align: left;
+  background: linear-gradient(#ffffff, #f5f5f5 28%);
+  min-height: 100vh;
+}
+.floattop ,.floattopempty{
+  display:none;
+}
+.container{
+  padding: 0;
+}

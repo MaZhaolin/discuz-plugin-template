@@ -22,6 +22,14 @@ class Response
 
   public static function view($template)
   {
+    if(PLUGIN_DEVELOPER == 1) {
+      try {
+        echo file_get_contents("http://localhost:5173/$template.html");
+      } catch (Exception $e) {
+          include template(PLUGIN_IDENTIFIER.':'.$template);
+      }
+      exit;
+    }
     include template(PLUGIN_IDENTIFIER.':'.$template);
     exit;
   }
