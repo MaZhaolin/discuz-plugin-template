@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "node ./build/build.js"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "dotenv": "^16.4.5"
+  }
+}

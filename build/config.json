@@ -1,0 +1,16 @@
+{
+  "input": "./", 
+  "output": "./plugin.zip",
+  "exclude": [
+    "node_modules",
+    ".git",
+    "build",
+    "package.json",
+    "package-lock.json",
+    ".env"
+  ],
+  "processFiles": [
+    "*.php",
+    "*.js"
+  ]
+}
