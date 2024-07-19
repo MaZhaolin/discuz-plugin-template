@@ -51,7 +51,7 @@ const App: React.FC = () => {
         </div>
       </Content>
       <Footer style={{ textAlign: "center" }}>
-        Plugin Temlate ©{new Date().getFullYear()} by <a href="https://github.com/MaZhaolin/dz-cli" target="_blank" >dz cli</a>
+        Plugin Temlate ©{new Date().getFullYear()} by <a href="https://github.com/MaZhaolin/discuz-cli" target="_blank" >dz cli</a>
       </Footer>
     </Layout>
   );
